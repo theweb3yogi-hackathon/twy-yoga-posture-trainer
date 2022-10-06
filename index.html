@@ -1,26 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<!DOCTYPE html><html lang="en"><head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>yogAI</title>
+    <script src="src/p5.min.js"></script>
+    <script src="src/ml5.min.js"></script>
+    <script src="practice.js"></script>
     <link rel="icon" type="image/png" sizes="32x32" href="imgs/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="imgs/favicon-16x16.png">
+    <title>TheWe3Yogi</title>
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1 style="width:1200px; margin-bottom: 10px; padding-left:20px; font-size:110px;"> Welcome to YogAI</h1>
-  <h2> your AI yoga companion</h2>
-  <img src="imgs/yoga 1.svg" style="margin-left:600px; margin-top:30px; width: 694px; height: 700px;">
-  <img src="imgs/sparkles.svg" style="position:absolute; top:120px; left:1130px; width:180px; height:167px">
-  <div><a href="instructionsLearn.html" style="width: 240px"><indexbutton style="top: 380px">Learn</indexbutton></a></div>
-  <div><a href="instructionsPractice.html" style="width: 150px"><indexbutton style="top: 475px">Practice</indexbutton></a></div>
-  <a href="https://github.com/cris-maillo/yogAI" target="_blank" ><img style="width:52px; height:52px; left:110px; top:580px; position: absolute; z-index:1; " src="imgs/logo.svg" alt="logo" /></a>
-  <div><a href="https://github.com/cris-maillo/yogAI" target="_blank" style="width: 150px"><indexbutton style="top: 570px; padding-left: 70px">GitHub</indexbutton></a></div>
-  <div><a href="about.html" style="width: 210px"><indexbutton style="top:665px;">About yogAI</indexbutton></a></div>
+    <meta charset="utf-8">
+  </head>
   
-
-
-</body>
-<footer>&copy; Copyright & Stuff 2020. By Cristina Maillo. Made With ❤️ & 💧.</footer>
-</html>
+  <body>
+    <img src="imgs/blob3.svg" id="blob" style="position:absolute; width: 600px; height: 600px; left: -210px; top: -350px;">
+    <h1 style="font-size: 100px; top:-30px">Practice</h1>
+    <div id="rectangle" style="width:640px; height:480px; margin-left:80px; margin-top:160px; background-color:grey; text-align:center; box-sizing: border-box; padding: 210px; font-size: 50px; font-weight: normal; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color:white; display:block;">Loading...</div>
+    <img src="imgs/sparkles.svg" id="sparkles" style="top:65px; left:800px; position:absolute; width:120px; height:107px; z-index:1; display:none">
+    <h1 id="finish" style="font-size:50px; top:-20px; left:910px; position:absolute;"></h1>
+    <h1 id="welldone" style="font-size:50px; top:35px; left:910px; position:absolute;"></h1>
+    <div class="parent">
+      <h1 id="poseName" class="child" style="font-size: 100px; text-align:center; top: 120px"><span>Tree</span></h1>
+    </div>
+    <h1 style="font-size: 100px; top:320px; left:1000px"><span id="time">00:10</span></h1>
+    <h1 style="font-size: 40px; top:450px; left:960px">hold it for 10 Seconds</h1>
+    <!-- <div><a href="index.html" style="width: 150px"><indexbutton style="font-size: 40px; top:740px">Back</indexbutton></a></div> -->
+  </body>
+<footer>&copy; Copyright & Stuff 2020. By Cristina Maillo. Made With ❤️ & 💧.</footer></html>

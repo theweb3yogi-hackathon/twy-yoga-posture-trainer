@@ -3,7 +3,8 @@ let poseNet;
 let pose;
 let skeleton;
 let thirtysecs;
-let posesArray = ['Mountain', 'Tree', 'Downward Dog', 'Warrior II'];
+// let posesArray = ['Mountain', 'Tree', 'Downward Dog', 'Warrior II'];
+let posesArray = ['Meditate'];
 
 let yogi;
 let poseLabel
@@ -55,6 +56,7 @@ function classifyPose(){
 }
 
 function gotResult(error, results) {
+  console.log(error, results[0])
   if (results[0].confidence > 0.70) {
     if (results[0].label == "1"){
       poseLabel = "Mountain";
@@ -68,6 +70,7 @@ function gotResult(error, results) {
           poseLabel = "Warrior 2";
         }else{
           poseLabel = "Chair";
+          // poseLabel = "Meditate";
         }}
   //startTimer(thirtysecs, display);
   classifyPose();

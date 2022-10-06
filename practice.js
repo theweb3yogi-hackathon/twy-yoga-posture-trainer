@@ -2,7 +2,9 @@ let video;
 let poseNet;
 let pose;
 let skeleton;
-let posesArray = ['Mountain', 'Tree', 'Downward Dog', 'Warrior I', 'Warrior II', 'Chair'];
+let posesArray = ['Mountain'];
+
+let PARENT_HOST_URL = 'http://localhost:3000'
 
 var poseImage;
 
@@ -16,6 +18,28 @@ var poseCounter;
 var target;
 
 var timeLeft;
+window.addEventListener("message", (event) => {
+  // Do we trust the sender of this message?
+  // alert(event.data, event.origin)
+  console.log(JSON.stringify(event.data) + event.origin)
+
+  if (event.origin !== "http://127.0.0.1:3000")
+    return;
+
+  // event.source is window.opener
+  // event.data is "hello there!"
+  // Assuming you've verified the origin of the received message (which
+  // you must do in any case), a convenient idiom for replying to a
+  // message is to call postMessage on event.source and provide
+  // event.origin as the targetOrigin.
+  // event.source.postMessage("hi there yourself!  the secret response " +
+  //   "is: rheeeeet!",
+  //   event.origin);
+});
+
+function sendEventToParentWindow(data) {
+  window.top.postMessage(data, PARENT_HOST_URL)
+}
 
 function setup() {
   var canvas = createCanvas(640, 480);
@@ -29,18 +53,18 @@ function setup() {
   targetLabel = 1;
   target = posesArray[poseCounter];
   document.getElementById("poseName").textContent = target;
-  timeLeft = 30;
+  timeLeft = 10;
   document.getElementById("time").textContent = "00:" + timeLeft;
   errorCounter = 0;
   iterationCounter = 0;
-  
+
   let options = {
     inputs: 34,
     outputs: 6,
     task: 'classification',
     debug: true
   }
-  
+
   yogi = ml5.neuralNetwork(options);
   const modelInfo = {
     model: 'modelv2/model2.json',
@@ -49,13 +73,13 @@ function setup() {
   };
   yogi.load(modelInfo, yogiLoaded);
 }
-  
-function yogiLoaded(){
+
+function yogiLoaded() {
   console.log("Model ready!");
   classifyPose();
 }
 
-function classifyPose(){
+function classifyPose() {
   if (pose) {
     let inputs = [];
     for (let i = 0; i < pose.keypoints.length; i++) {
@@ -76,44 +100,60 @@ function gotResult(error, results) {
   document.getElementById("sparkles").style.display = "none";
   if (results[0].confidence > 0.70) {
     console.log("Confidence");
-    if (results[0].label == targetLabel.toString()){
+    if (results[0].label == targetLabel.toString()) {
       console.log(targetLabel);
       iterationCounter = iterationCounter + 1;
 
       console.log(iterationCounter)
-      
-      if (iterationCounter == 30) {
-        console.log("30!")
+
+      if (iterationCounter == 10) {
+        console.log("10!")
         iterationCounter = 0;
-        nextPose();}
-      else{
+        nextPose();
+      }
+      else {
         console.log("doin this")
         timeLeft = timeLeft - 1;
-        if (timeLeft < 10){
+        
+        if (timeLeft == 1) {
+          sendEventToParentWindow({
+            isPostureCorrect: true
+          })
+          console.log(`event sent to parent`);
+        }
+
+        if (timeLeft < 10) {
           document.getElementById("time").textContent = "00:0" + timeLeft;
-        }else{
-        document.getElementById("time").textContent = "00:" + timeLeft;}
-        setTimeout(classifyPose, 1000);}}
-    else{
+        } else {
+          document.getElementById("time").textContent = "00:" + timeLeft;
+        }
+        setTimeout(classifyPose, 1000);
+      }
+    }
+    else {
       errorCounter = errorCounter + 1;
       console.log("error");
-      if (errorCounter >= 4){
+      if (errorCounter >= 4) {
         console.log("four errors");
         iterationCounter = 0;
-        timeLeft = 30;
-        if (timeLeft < 10){
+        timeLeft = 5;
+        if (timeLeft < 10) {
           document.getElementById("time").textContent = "00:0" + timeLeft;
-        }else{
-        document.getElementById("time").textContent = "00:" + timeLeft;}
+        } else {
+          document.getElementById("time").textContent = "00:" + timeLeft;
+        }
         errorCounter = 0;
         setTimeout(classifyPose, 100);
-      }else{
+      } else {
         setTimeout(classifyPose, 100);
-      }}}
-  else{
+      }
+    }
+  }
+  else {
     console.log("whatwe really dont want")
     setTimeout(classifyPose, 100);
-}}
+  }
+}
 
 
 function gotPoses(poses) {
@@ -131,9 +171,9 @@ function modelLoaded() {
 function draw() {
   push();
   translate(video.width, 0);
-  scale(-1,1);
+  scale(-1, 1);
   image(video, 0, 0, video.width, video.height);
-  
+
   if (pose) {
     for (let i = 0; i < skeleton.length; i++) {
       let a = skeleton[i][0];
@@ -146,13 +186,13 @@ function draw() {
   pop();
 }
 
-function nextPose(){
-  if (poseCounter >= 5) {
+function nextPose() {
+  if (poseCounter >= 0) {
     console.log("Well done, you have learnt all poses!");
     document.getElementById("finish").textContent = "Amazing!";
-    document.getElementById("welldone").textContent = "All poses done.";
+    document.getElementById("welldone").textContent = "You have done great.";
     document.getElementById("sparkles").style.display = 'block';
-  }else{
+  } else {
     console.log("Well done, you all poses!");
     //var stars = document.getElementById("starsid");
     //stars.classList.add("stars.animated");
@@ -166,7 +206,8 @@ function nextPose(){
     document.getElementById("welldone").textContent = "Well done, next pose!";
     document.getElementById("sparkles").style.display = 'block';
     console.log("classifying again");
-    timeLeft = 30;
+    timeLeft = 5;
     document.getElementById("time").textContent = "00:" + timeLeft;
-    setTimeout(classifyPose, 4000)}
+    setTimeout(classifyPose, 4000)
+  }
 }
